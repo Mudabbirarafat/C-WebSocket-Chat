@@ -11,14 +11,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Syntax-only, because this project targets Winsock and will not link on
-      # Linux. It still proves every translation unit parses under a strict
-      # compiler, which is the part a reviewer cares about.
-      - name: Syntax check all sources
+      # This project targets Winsock, so a plain Linux g++ cannot even parse it
+      # (<winsock2.h> does not exist there). The mingw-w64 cross compiler ships
+      # the Windows headers, so the check runs against the real target.
+      - name: Install mingw-w64 cross compiler
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq g++-mingw-w64-x86-64
+
+      - name: Syntax check all sources against the Windows target
         run: |
           status=0
           for f in $(find . -name '*.cpp' -o -name '*.cc'); do
             echo "=== $f"
-            g++ -std=c++17 -fsyntax-only -Wall "$f" || status=1
+            x86_64-w64-mingw32-g++ -std=c++17 -fsyntax-only -Wall "$f" || status=1
           done
           exit $status
