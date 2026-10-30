@@ -1,5 +1,7 @@
 # C++ WebSocket Chat Server 💬
 
+[![CI](https://github.com/Mudabbirarafat/C-WebSocket-Chat/actions/workflows/ci.yml/badge.svg)](https://github.com/Mudabbirarafat/C-WebSocket-Chat/actions/workflows/ci.yml)
+
 A real-time multi-user chat application built with C++ (Winsock2) backend and modern HTML5/JavaScript frontend with WebSocket support.
 
 ## Features ✨

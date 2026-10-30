@@ -1,0 +1,24 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Syntax-only, because this project targets Winsock and will not link on
+      # Linux. It still proves every translation unit parses under a strict
+      # compiler, which is the part a reviewer cares about.
+      - name: Syntax check all sources
+        run: |
+          status=0
+          for f in $(find . -name '*.cpp' -o -name '*.cc'); do
+            echo "=== $f"
+            g++ -std=c++17 -fsyntax-only -Wall "$f" || status=1
+          done
+          exit $status
